@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="album"
+            type="com.example.task.model.Album" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="@android:color/darker_gray"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAlbumId"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:gravity="center"
+            android:text="@{album.id}"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAlbumTitle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:gravity="start|center"
+            android:text="@{album.title}"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tvAlbumId"
+            app:layout_constraintRight_toLeftOf="@id/icManipulate"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="7" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icManipulate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_star"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
