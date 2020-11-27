@@ -10,19 +10,19 @@ import com.example.task.model.Info
     entities = [Album::class, Info::class],
     version = 1
 )
-abstract class Database : RoomDatabase() {
+abstract class TaskDatabase : RoomDatabase() {
     abstract fun getTaskDao(): TaskDao
 
     companion object {
         @Volatile
-        private var instance: Database? = null
+        private var instance: TaskDatabase? = null
 
-        operator fun invoke(context: Context): Database {
+        operator fun invoke(context: Context): TaskDatabase {
             return instance ?: synchronized(this) {
 
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    Database::class.java,
+                    TaskDatabase::class.java,
                     "TASK_DB"
                 ).build()
                 this.instance = instance

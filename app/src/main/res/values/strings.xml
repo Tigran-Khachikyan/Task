@@ -7,7 +7,6 @@
     <string name="published">Published at</string>
     <string name="cancel">Cancel</string>
     <string name="remove">OK</string>
-    <string name="successfullyRemoved">Favourite list is cleared.</string>
     <string name="warningText">Do you want to clear favourite list?</string>
     <string name="warning">Warning!</string>
     <string name="error">Error Fetching News!</string>
@@ -18,7 +17,12 @@
 
 
     <string name="error_loading">Error occurred during loading</string>
-    <string name="albums">albums</string>
-    <string name="albumInfo">album information</string>
+    <string name="error_removing">Removing failed!</string>
+    <string name="albums">Albums</string>
+    <string name="albumInfo">Album information</string>
     <string name="loading">Loading…</string>
+    <string name="refreshing">Refreshing…</string>
+    <string name="save">Save</string>
+    <string name="removing">Removing</string>
+    <string name="successRemoved">Album Successfully removed!</string>
 </resources>

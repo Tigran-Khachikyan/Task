@@ -1,38 +1,31 @@
 package com.example.task.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.task.model.Album
+import com.example.task.model.Info
 
 @Dao
 interface TaskDao {
 
-/*    @Query("SELECT * FROM ARTICLES")
-    fun getAll(): LiveData<List<ModelDb>>
+    @Query("SELECT * FROM ALBUMS")
+    suspend fun getSavedAlbums(): List<Album>?
 
-    @Query("SELECT * FROM ARTICLES WHERE _id =:id")
-    fun getArticle(id: String): ModelDb
+    @Query("SELECT * FROM INFO WHERE albumId =:albumId")
+    suspend fun getInfoFromAlbum(albumId: Int): List<Info>?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(articles: ModelDb)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAlbum(album: Album)
 
-    @Query("DELETE FROM ARTICLES WHERE _id =:id")
-    suspend fun removeFavourite(id: String)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveInfo(info: List<Info>)
 
-    @Query("DELETE FROM ARTICLES")
-    suspend fun clearAll()*/
+    @Query("DELETE FROM ALBUMS WHERE ID =:id")
+    suspend fun removeAlbum(id: Int)
 
-    /*@Query("UPDATE ARTICLES SET isFavourite = 0")
-    suspend fun removeAllFavourites()*/
+    @Query("DELETE FROM INFO WHERE albumId =:albumId")
+    suspend fun removeInfo(albumId: Int)
 
-    /*@Query("SELECT * FROM ARTICLES WHERE isFavourite = 1")
-    fun getFavourites(): LiveData<List<ModelApi>>*/
-
-    /* @Query("UPDATE ARTICLES SET isFavourite=0 WHERE _id = :id")
-     suspend fun removeFavourite(id: String)*/
-
-    /* @Query("UPDATE ARTICLES SET isFavourite=1 WHERE _id = :id")
-     suspend fun setFavourite(id: String)*/
 }

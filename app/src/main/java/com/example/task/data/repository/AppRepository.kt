@@ -1,12 +1,15 @@
 package com.example.task.data.repository
 
+import com.example.task.model.Album
+import com.example.task.model.Info
+import retrofit2.Response
+
 
 interface AppRepository {
-/*    fun getSavedArticle(id: String): ModelDb?
-    fun getFavourites(): LiveData<List<ModelDb>>
-    suspend fun getNewsApi(page:Int): List<ModelApi>?
-    // suspend fun updateDb()
-    suspend fun save(article: ModelDb)
-    suspend fun remove(id: String)
-    suspend fun clearAll()*/
+    suspend fun getSavedAlbums(): List<Album>?
+    suspend fun getAlbumsFromServer(): Response<List<Album>?>
+    suspend fun getAlbumInfoFromDb(albumId: Int): List<Info>?
+    suspend fun getAlbumInfoFromServer(albumId: Int): Response<List<Info>?>
+    suspend fun save(album: Album, info: List<Info>)
+    suspend fun remove(albumId: Int): Boolean
 }

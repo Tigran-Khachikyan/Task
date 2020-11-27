@@ -1,3 +1,4 @@
+/*
 package com.example.task.ui
 
 import com.example.task.model.Album
@@ -22,4 +23,4 @@ interface AlbumsView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class, tag = "show_hide_image")
     fun hideStatus()
-}
+}*/

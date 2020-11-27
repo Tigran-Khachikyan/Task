@@ -1,3 +1,4 @@
+/*
 package com.example.task.ui.fragments
 
 import android.os.Bundle
@@ -15,7 +16,7 @@ import com.example.task.ui.presenters.BaseAlbumsPresenter
 import com.example.task.ui.presenters.SavedAlbumsPresenter
 import moxy.MvpAppCompatFragment
 
-class AlbumsFragment(private val onlySaved: Boolean) : MvpAppCompatFragment(), AlbumsView {
+class AlbumsFragmentMvp(private val onlySaved: Boolean) : MvpAppCompatFragment(), AlbumsView {
 
     private lateinit var presenter: BaseAlbumsPresenter
     private lateinit var binding: FragmentAlbumBinding
@@ -65,4 +66,4 @@ class AlbumsFragment(private val onlySaved: Boolean) : MvpAppCompatFragment(), A
     override fun hideStatus() {
         binding.tvStatus.visibility = View.GONE
     }
-}
+}*/

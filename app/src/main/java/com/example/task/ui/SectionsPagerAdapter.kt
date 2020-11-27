@@ -5,7 +5,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.task.R
-import com.example.task.ui.fragments.AlbumsFragment
+import com.example.task.ui.fragments.LoadAlbumsFragment
+import com.example.task.ui.fragments.SavedAlbumsFragment
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
@@ -18,9 +19,9 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> AlbumsFragment(false) as Fragment
-            1 -> AlbumsFragment(true)as Fragment
-            else -> AlbumsFragment(true) as Fragment
+            0 -> LoadAlbumsFragment()
+            1 -> SavedAlbumsFragment()
+            else -> LoadAlbumsFragment()
         }
     }
 

@@ -3,40 +3,64 @@ package com.example.task.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task.R
 import com.example.task.databinding.HolderAlbumBinding
 import com.example.task.model.Album
 
-class AlbumsAdapter(
+sealed class AlbumsAdapter(
     private var albums: List<Album>?,
     private val onlySaved: Boolean,
-    private val openInfo: (id: Int) -> Unit,
-    private val saveOrRemove: (id: Int) -> Unit
+    private var open: (Album?) -> Unit,
+    private val remove: ((Int, Int) -> Unit)? = null
 ) :
     RecyclerView.Adapter<AlbumsAdapter.Holder>() {
 
+    private var iconEnabled: Boolean = true
+    fun enableIconRemove() {
+        iconEnabled = true
+    }
+
+    class LoadAlbumsAdapter(
+        albums: List<Album>?,
+        open: (Album?) -> Unit
+    ) : AlbumsAdapter(albums, false, open)
+
+    class SavedAlbumsAdapter(
+        albums: List<Album>?,
+        open: (Album?) -> Unit,
+        remove: ((Int, Int) -> Unit)
+    ) : AlbumsAdapter(albums, true, open, remove)
+
     fun setAlbums(albums: List<Album>?) {
         this.albums = albums
+        iconEnabled = true
         notifyDataSetChanged()
+    }
+
+    fun removeAlbum(pos: Int) {
+        albums?.run { (this as MutableList).removeAt(pos) }
+        notifyItemRemoved(pos)
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val binding = HolderAlbumBinding.bind(itemView)
         fun bind(album: Album) {
-            binding.album = album
-            val drawResIcon: Int =
-                if (onlySaved) R.drawable.ic_trash else {
-                    if (album.saved) R.drawable.ic_star_favourite
-                    else R.drawable.ic_star
+            binding.tvAlbumId.text =
+                if (onlySaved) (layoutPosition + 1).toString() else album.id.toString()
+            binding.tvAlbumTitle.text = album.title
+            binding.icManipulate.visibility = if (onlySaved) View.VISIBLE else View.GONE
+            binding.layAlbum.setOnClickListener { open(albums?.get(layoutPosition)) }
+            binding.icManipulate.setOnClickListener {
+                remove?.run {
+                    val albumId = albums?.get(layoutPosition)?.id
+                    if (albumId != null) {
+                        invoke(layoutPosition, albumId)
+                        iconEnabled = false
+                    }
                 }
-            binding.icManipulate.setImageDrawable(
-                ResourcesCompat.getDrawable(itemView.context.resources, drawResIcon, null)
-            )
-            binding.layAlbum.setOnClickListener { openInfo(layoutPosition) }
-            binding.icManipulate.setOnClickListener { saveOrRemove(layoutPosition) }
+            }
         }
     }
 
@@ -48,9 +72,7 @@ class AlbumsAdapter(
     override fun getItemCount(): Int = albums?.size ?: 0
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        albums?.let {
-            holder.bind(it[position])
-        }
+        albums?.let { holder.bind(it[position]) }
     }
 
 }
