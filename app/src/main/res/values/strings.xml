@@ -29,4 +29,5 @@
     <string name="download">Download</string>
     <string name="downloading">Downloading…</string>
     <string name="downloadingFailed">Downloading failed!</string>
+    <string name="zoom">zoom</string>
 </resources>

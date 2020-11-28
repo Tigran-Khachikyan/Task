@@ -7,83 +7,114 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryLight"
+        android:padding="4dp">
 
-        <LinearLayout
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitlePhoto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryLight"
-            android:orientation="vertical"
-            android:padding="4dp"
-            tools:context=".ui.fragments.PhotoFragment">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:fontFamily="@font/roboto_medium" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvTitlePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:fontFamily="@font/roboto_medium" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivPhotoLarge"
+            app:layout_constraintTop_toBottomOf="@id/tvTitlePhoto"
+            app:layout_constraintBottom_toTopOf="@id/btnDownload"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivPhotoLarge"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1" />
-
-            <Button
-                android:id="@+id/btnDownload"
-                style="@style/button"
-                android:layout_gravity="center"
-                android:drawableEnd="@drawable/ic_download"
-                android:text="@string/download"
-                android:visibility="visible" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ProgressBar
-            android:id="@+id/progressPhoto"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large.Inverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            <ProgressBar
+                android:id="@+id/progressPhoto"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvStatusPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            app:layout_anchor="@id/progress"
-            android:padding="4dp"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/tvStatusPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_anchor="@id/progress" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/lottie_saved"
-            app:lottie_repeatCount="0" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/lottie_saved"
+                app:lottie_repeatCount="0" />
 
         </LinearLayout>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabZoomIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@string/zoom"
+            android:visibility="gone"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.7"
+            app:maxImageSize="36dp"
+            app:srcCompat="@drawable/ic_zoom_in" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabZoomOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@string/zoom"
+            android:visibility="gone"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.7"
+            app:maxImageSize="36dp"
+            app:srcCompat="@drawable/ic_zoom_out" />
+
+        <Button
+            android:id="@+id/btnDownload"
+            style="@style/button"
+            android:layout_gravity="center"
+            android:drawableEnd="@drawable/ic_download"
+            android:text="@string/download"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

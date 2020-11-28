@@ -4,27 +4,26 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.task.BUNDLE_KEY_INFO
 import com.example.task.R
 import com.example.task.REQUEST_PERMISSION_CODE
+import com.example.task.ZOOM_CHANGE_SIZE
 import com.example.task.model.Info
-import com.example.task.ui.MainActivity
-import com.example.task.ui.hide
-import com.example.task.ui.show
-import com.example.task.ui.showStatus
+import com.example.task.ui.*
 import com.example.task.ui.viewmodels.ActivityViewModel
 import com.example.task.ui.viewmodels.PhotoViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_photo.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+
 
 class PhotoFragment : Fragment(), CoroutineScope {
 
@@ -35,6 +34,8 @@ class PhotoFragment : Fragment(), CoroutineScope {
     private lateinit var activityViewModel: ActivityViewModel
     private val info: Info? by lazy { arguments?.getParcelable(BUNDLE_KEY_INFO) }
     private lateinit var activity: MainActivity
+    private var height: Int = 0
+    private var width: Int = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -60,6 +61,20 @@ class PhotoFragment : Fragment(), CoroutineScope {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        ivPhotoLarge.onInitialized {
+            launch {
+                delay(1500)
+                height = ivPhotoLarge.height
+                width = ivPhotoLarge.width
+                fabZoomOut.show()
+                fabZoomIn.show()
+            }
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
@@ -73,6 +88,8 @@ class PhotoFragment : Fragment(), CoroutineScope {
                 .placeholder(R.drawable.ic_image_placeholder)
                 .into(ivPhotoLarge)
             btnDownload.setOnClickListener { downloadImage(url) }
+            fabZoomIn.setOnClickListener { zoomIn(url) }
+            fabZoomOut.setOnClickListener { zoomOut(url) }
         }
     }
 
@@ -117,6 +134,28 @@ class PhotoFragment : Fragment(), CoroutineScope {
         Toast.makeText(requireContext(), R.string.downloadingFailed, Toast.LENGTH_LONG).show()
         progressPhoto.hide()
         tvStatusPhoto.hide()
+    }
+
+    private fun zoomIn(url: String) {
+        if (height > 0 && width > 0) {
+            height += ZOOM_CHANGE_SIZE
+            width += ZOOM_CHANGE_SIZE
+            Picasso.get()
+                .load(url)
+                .resize(height, width)
+                .into(ivPhotoLarge)
+        }
+    }
+
+    private fun zoomOut(url: String) {
+        if (height > ZOOM_CHANGE_SIZE && width > ZOOM_CHANGE_SIZE) {
+            height -= ZOOM_CHANGE_SIZE
+            width -= ZOOM_CHANGE_SIZE
+            Picasso.get()
+                .load(url)
+                .resize(height, width)
+                .into(ivPhotoLarge)
+        }
     }
 
 }
