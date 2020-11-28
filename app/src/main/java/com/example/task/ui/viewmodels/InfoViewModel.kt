@@ -71,4 +71,15 @@ class InfoViewModel(application: Application) : AndroidViewModel(application) {
         infoSavedLoaded
     }
 
+    private val removeSucceed = MutableLiveData<Boolean>()
+    fun remove(albumId: Int): LiveData<Boolean> {
+        viewModelScope.launch(Dispatchers.IO) {
+            val succeed  = repository.remove(albumId)
+            withContext(Dispatchers.Main){
+                removeSucceed.value = succeed
+            }
+        }
+        return removeSucceed
+    }
+
 }

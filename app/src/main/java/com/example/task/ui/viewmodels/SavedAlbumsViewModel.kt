@@ -14,7 +14,6 @@ class SavedAlbumsViewModel(application: Application) : AndroidViewModel(applicat
     private val repository: Repository by lazy { Repository(application) }
 
     private val albumList = MutableLiveData<List<Album>?>()
-    private val removeSucceed = MutableLiveData<Boolean>()
 
     private fun loadAlbums() {
         Log.d("kbdja644", "loadAlbums")
@@ -30,6 +29,7 @@ class SavedAlbumsViewModel(application: Application) : AndroidViewModel(applicat
         refreshTrigger.value = Unit
     }
 
+    private val removeSucceed = MutableLiveData<Boolean>()
     fun remove(id: Int): LiveData<Boolean> {
         viewModelScope.launch(Dispatchers.IO) {
             val succeed  = repository.remove(id)

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.task.BUNDLE_KEY_ALBUM
+import com.example.task.BUNDLE_KEY_FROM_SAVED_FOLDER
 import com.example.task.R
 import com.example.task.adapters.AlbumsAdapter
 import com.example.task.databinding.FragmentAlbumBinding
@@ -45,13 +46,18 @@ class LoadAlbumsFragment : Fragment() {
     private fun initViews() {
         binding.swipeRefreshAlbums.setOnRefreshListener { refresh() }
         binding.recAlbums.setHasFixedSize(true)
-        adapter = AlbumsAdapter.LoadAlbumsAdapter(null) { album ->
-            findNavController().navigate(
-                R.id.nav_info,
-                Bundle().apply { putParcelable(BUNDLE_KEY_ALBUM, album) }
-            )
-        }
+        adapter = AlbumsAdapter.LoadAlbumsAdapter(null) { open(it) }
         binding.recAlbums.adapter = adapter
+    }
+
+    private fun open(album: Album?) {
+        findNavController().navigate(
+            R.id.nav_info,
+            Bundle().apply {
+                putParcelable(BUNDLE_KEY_ALBUM, album)
+                putBoolean(BUNDLE_KEY_FROM_SAVED_FOLDER, false)
+            }
+        )
     }
 
     private fun load() {

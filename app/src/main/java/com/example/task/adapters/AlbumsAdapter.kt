@@ -38,9 +38,13 @@ sealed class AlbumsAdapter(
         notifyDataSetChanged()
     }
 
-    fun removeAlbum(pos: Int) {
-        albums?.run { (this as MutableList).removeAt(pos) }
-        notifyItemRemoved(pos)
+    // return true if it was the last album
+    fun removeAlbum(pos: Int): Boolean? {
+        return albums?.run {
+            (this as MutableList).removeAt(pos)
+            notifyItemRemoved(pos)
+            isEmpty()
+        }
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {

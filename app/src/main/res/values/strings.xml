@@ -6,7 +6,7 @@
     <string name="tab_text_2">Favourite</string>
     <string name="published">Published at</string>
     <string name="cancel">Cancel</string>
-    <string name="remove">OK</string>
+    <string name="remove">Remove</string>
     <string name="warningText">Do you want to clear favourite list?</string>
     <string name="warning">Warning!</string>
     <string name="error">Error Fetching News!</string>
@@ -25,4 +25,8 @@
     <string name="save">Save</string>
     <string name="removing">Removing</string>
     <string name="successRemoved">Album Successfully removed!</string>
+    <string name="noSavedAlbums">No saved albums!</string>
+    <string name="download">Download</string>
+    <string name="downloading">Downloading…</string>
+    <string name="downloadingFailed">Downloading failed!</string>
 </resources>

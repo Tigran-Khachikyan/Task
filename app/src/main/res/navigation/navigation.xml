@@ -17,4 +17,8 @@
         android:id="@+id/nav_home"
         android:name="com.example.task.ui.fragments.HomeFragment"
         android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/nav_photo"
+        android:name="com.example.task.ui.fragments.PhotoFragment"
+        android:label="PhotoFragment" />
 </navigation>

@@ -5,20 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.task.R
 import com.example.task.databinding.HolderInfoBinding
-import com.example.task.model.Album
 import com.example.task.model.Info
+import com.squareup.picasso.Picasso
 
 class InfoAdapter(
-    private var info: List<Info>?,
-    private val openPhoto: (Int) -> Unit
+    private var infoList: List<Info>?,
+    private val openPhoto: (Info?) -> Unit
 ) :
     RecyclerView.Adapter<InfoAdapter.Holder>() {
 
     fun setAlbums(info: List<Info>?) {
-        this.info = info
+        this.infoList = info
         notifyDataSetChanged()
     }
 
@@ -26,17 +25,16 @@ class InfoAdapter(
 
         private val binding = HolderInfoBinding.bind(itemView)
         fun bind(info: Info) {
-            binding.tvInfoId.text = (layoutPosition+1).toString()
+            binding.tvInfoId.text = (layoutPosition + 1).toString()
             binding.tvInfoTitle.text = info.title
-            Log.d("jahsdkasd","thumbnailUrl: ${info.thumbnailUrl}")
-            Log.d("jahsdkasd","url: ${info.url}")
-            Glide.with(itemView.context)
+            Log.d("jahsdkasd", "thumbnailUrl: ${info.thumbnailUrl}")
+            Log.d("jahsdkasd", "url: ${info.url}")
+            Picasso.get()
                 .load(info.thumbnailUrl)
-              //  .centerCrop()
                 .placeholder(R.drawable.ic_image_placeholder)
-                .dontAnimate()
-                .into(binding.ivPhotoInto)
-            binding.ivPhotoInto.setOnClickListener { openPhoto(layoutPosition) }
+                .into(binding.ivPhotoInto);
+
+            binding.ivPhotoInto.setOnClickListener { openPhoto(infoList?.get(layoutPosition)) }
         }
     }
 
@@ -45,10 +43,10 @@ class InfoAdapter(
         return Holder(view)
     }
 
-    override fun getItemCount(): Int = info?.size ?: 0
+    override fun getItemCount(): Int = infoList?.size ?: 0
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        info?.let { holder.bind(it[position]) }
+        infoList?.let { holder.bind(it[position]) }
     }
 
 }

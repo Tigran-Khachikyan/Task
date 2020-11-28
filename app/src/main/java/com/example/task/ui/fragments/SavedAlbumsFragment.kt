@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.task.BUNDLE_KEY_ALBUM
+import com.example.task.BUNDLE_KEY_FROM_SAVED_FOLDER
 import com.example.task.R
 import com.example.task.adapters.AlbumsAdapter
 import com.example.task.databinding.FragmentAlbumBinding
@@ -18,6 +19,8 @@ import com.example.task.ui.hide
 import com.example.task.ui.show
 import com.example.task.ui.showStatus
 import com.example.task.ui.viewmodels.SavedAlbumsViewModel
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class SavedAlbumsFragment : Fragment() {
 
@@ -46,20 +49,22 @@ class SavedAlbumsFragment : Fragment() {
     private fun initViews() {
         binding.swipeRefreshAlbums.isEnabled = false
         binding.recAlbums.setHasFixedSize(true)
-        val openInfo: (Album?) -> Unit = { album ->
-            findNavController().navigate(
-                R.id.nav_info,
-                Bundle().apply { putParcelable(BUNDLE_KEY_ALBUM, album) }
-            )
-        }
         adapter = AlbumsAdapter.SavedAlbumsAdapter(
-            null,
-            { openInfo(it) },
-            { pos, id ->
-                deletedAlbumPosition = pos
-                remove(id)
-            })
+            null, { open(it) }) { pos, id ->
+            deletedAlbumPosition = pos
+            remove(id)
+        }
         binding.recAlbums.adapter = adapter
+    }
+
+    private fun open(album: Album?) {
+        findNavController().navigate(
+            R.id.nav_info,
+            Bundle().apply {
+                putParcelable(BUNDLE_KEY_ALBUM, album)
+                putBoolean(BUNDLE_KEY_FROM_SAVED_FOLDER, true)
+            }
+        )
     }
 
     private fun load() {
@@ -70,11 +75,13 @@ class SavedAlbumsFragment : Fragment() {
     }
 
     private fun showAlbums(albums: List<Album>?) {
-        albums?.let {
-            binding.progress.hide()
+        if (albums != null && albums.isNotEmpty())
             binding.tvStatus.hide()
-            adapter.setAlbums(it)
-        }
+        else
+            binding.tvStatus.showStatus(R.string.noSavedAlbums)
+
+        binding.progress.hide()
+        adapter.setAlbums(albums)
     }
 
     private fun showError() {
@@ -88,8 +95,8 @@ class SavedAlbumsFragment : Fragment() {
         binding.progress.show()
         binding.tvStatus.showStatus(R.string.removing)
         viewModel.remove(albumId).observe(viewLifecycleOwner, { succeed ->
-                if (succeed) finishRemoving()
-                else showError()
+            if (succeed) finishRemoving()
+            else showError()
         })
     }
 
@@ -97,8 +104,9 @@ class SavedAlbumsFragment : Fragment() {
         deletedAlbumPosition?.let {
             binding.progress.hide()
             binding.tvStatus.hide()
-            adapter.removeAlbum(it)
-            Toast.makeText(requireContext(), R.string.successRemoved, Toast.LENGTH_LONG).show()
+            val wasTheLastAlbum = adapter.removeAlbum(it)
+            wasTheLastAlbum?.let { if (it) binding.tvStatus.showStatus(R.string.noSavedAlbums) }
+            Toast.makeText(requireContext(), R.string.successRemoved, Toast.LENGTH_SHORT).show()
             deletedAlbumPosition = null
         }
     }

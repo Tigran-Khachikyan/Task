@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.task.BUNDLE_KEY_ALBUM
+import com.example.task.BUNDLE_KEY_FROM_SAVED_FOLDER
+import com.example.task.BUNDLE_KEY_INFO
 import com.example.task.R
 import com.example.task.adapters.InfoAdapter
 import com.example.task.databinding.FragmentInfoListBinding
 import com.example.task.model.Album
 import com.example.task.model.Info
-import com.example.task.ui.hide
-import com.example.task.ui.show
-import com.example.task.ui.showStatus
+import com.example.task.ui.*
 import com.example.task.ui.viewmodels.InfoViewModel
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 
-class InfoListFragment : Fragment(), CoroutineScope {
+class InfoListFragment() : Fragment(), CoroutineScope {
 
     private val job: Job by lazy { Job() }
     override val coroutineContext: CoroutineContext
@@ -30,6 +31,9 @@ class InfoListFragment : Fragment(), CoroutineScope {
     private lateinit var viewModel: InfoViewModel
     private lateinit var binding: FragmentInfoListBinding
     private val album: Album? by lazy { arguments?.getParcelable(BUNDLE_KEY_ALBUM) }
+    private val fromSavedFolder: Boolean? by lazy {
+        arguments?.getBoolean(BUNDLE_KEY_FROM_SAVED_FOLDER)
+    }
     private lateinit var adapter: InfoAdapter
     private var infoList: List<Info>? = null
 
@@ -64,12 +68,23 @@ class InfoListFragment : Fragment(), CoroutineScope {
 
         binding.swipeRefreshInfo.setOnRefreshListener { refresh() }
         binding.recInfo.setHasFixedSize(true)
-        adapter = InfoAdapter(null) {
-
-        }
+        adapter = InfoAdapter(null) { openPhoto(it) }
         binding.recInfo.adapter = adapter
+        fromSavedFolder?.let { removable ->
+            if (removable) binding.btnSaveRemove.makeRemoving() else binding.btnSaveRemove.makeSaver()
+            binding.btnSaveRemove.setOnClickListener { if (removable) remove() else save() }
+        }
+    }
 
-        binding.btnSave.setOnClickListener { save() }
+    private fun openPhoto(info: Info?) {
+        info?.let {
+            findNavController().navigate(
+                R.id.nav_photo,
+                Bundle().apply {
+                    putParcelable(BUNDLE_KEY_INFO, info)
+                }
+            )
+        }
     }
 
     private fun load() {
@@ -88,7 +103,9 @@ class InfoListFragment : Fragment(), CoroutineScope {
             binding.swipeRefreshInfo.isRefreshing = false
             adapter.setAlbums(it)
             binding.icStatusSaved.visibility = View.VISIBLE
-            binding.btnSave.visibility = View.GONE
+            fromSavedFolder?.let {
+                binding.btnSaveRemove.visibility = if (it) View.VISIBLE else View.GONE
+            }
         }
     }
 
@@ -100,7 +117,7 @@ class InfoListFragment : Fragment(), CoroutineScope {
             binding.swipeRefreshInfo.isRefreshing = false
             adapter.setAlbums(it)
             binding.icStatusSaved.visibility = View.GONE
-            binding.btnSave.visibility = View.VISIBLE
+            binding.btnSaveRemove.visibility = View.VISIBLE
         }
     }
 
@@ -110,7 +127,7 @@ class InfoListFragment : Fragment(), CoroutineScope {
             binding.swipeRefreshInfo.isRefreshing = false
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             binding.tvStatus.showStatus(R.string.error_loading)
-            binding.btnSave.visibility = View.GONE
+            binding.btnSaveRemove.visibility = View.GONE
         }
     }
 
@@ -126,15 +143,51 @@ class InfoListFragment : Fragment(), CoroutineScope {
             if (album != null) {
                 viewModel.save(album!!, it)
                 launch {
-                    binding.btnSave.isEnabled = false
-                    binding.lottieSave.visibility = View.VISIBLE
-                    binding.btnSave.animate().alpha(0f).setDuration(1500).start()
+                    binding.btnSaveRemove.isEnabled = false
+                    binding.lottieSaveRemove.setAnimation(R.raw.lottie_saved)
+                    binding.lottieSaveRemove.visibility = View.VISIBLE
+                    binding.btnSaveRemove.animate().alpha(0f).setDuration(1500).start()
                     delay(3500)
-                    binding.lottieSave.visibility = View.GONE
+                    binding.lottieSaveRemove.visibility = View.GONE
                     delay(300)
                     binding.icStatusSaved.visibility = View.VISIBLE
                 }
             }
+        }
+    }
+
+    private fun remove() {
+        album?.run {
+            binding.progress.show()
+            binding.tvStatus.showStatus(R.string.removing)
+            binding.btnSaveRemove.isEnabled = false
+            viewModel.remove(id).observe(viewLifecycleOwner, { succeed ->
+                if (succeed) finishRemoving()
+                else showError()
+            })
+        }
+    }
+
+    private fun showError() {
+        binding.progress.hide()
+        binding.tvStatus.hide()
+        binding.btnSaveRemove.isEnabled = true
+        Toast.makeText(requireContext(), R.string.error_removing, Toast.LENGTH_LONG).show()
+    }
+
+    private fun finishRemoving() {
+        binding.progress.hide()
+        binding.tvStatus.hide()
+        launch {
+            binding.lottieSaveRemove.setAnimation(R.raw.lottie_remove)
+            binding.lottieSaveRemove.visibility = View.VISIBLE
+            binding.btnSaveRemove.animate().alpha(0f).setDuration(1500).start()
+            delay(3000)
+            binding.icStatusSaved.visibility = View.GONE
+            delay(500)
+            binding.lottieSaveRemove.visibility = View.GONE
+            delay(300)
+            activity?.onBackPressed()
         }
     }
 

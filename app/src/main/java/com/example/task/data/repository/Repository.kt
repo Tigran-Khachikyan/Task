@@ -1,6 +1,10 @@
 package com.example.task.data.repository
 
+import android.app.DownloadManager
 import android.content.Context
+import android.database.Cursor
+import android.net.Uri
+import android.os.Environment
 import androidx.lifecycle.LiveData
 import com.example.task.data.api.RetrofitService
 import com.example.task.data.api.TaskApiService
@@ -8,7 +12,9 @@ import com.example.task.data.db.TaskDao
 import com.example.task.data.db.TaskDatabase
 import com.example.task.model.Album
 import com.example.task.model.Info
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
+import java.io.File
 import java.lang.Exception
 
 class Repository(
@@ -17,6 +23,8 @@ class Repository(
 
     private val taskApiService: TaskApiService by lazy { RetrofitService.create() }
     private val taskDao: TaskDao by lazy { TaskDatabase.invoke(context).getTaskDao() }
+    private val downloadManager by lazy { context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
+
 
     override suspend fun getSavedAlbums(): List<Album>? = taskDao.getSavedAlbums()
 
@@ -43,43 +51,5 @@ class Repository(
             false
         }
     }
-
-
-    /*
-    *//* override suspend fun updateDb() {
-
-         if (hasNetwork(context)) {
-             val newsResponse = safeApiCall(
-                 call = { newsApi.getNewsAsync().await() },
-                 errorMessage = context.getString(R.string.error)
-             )
-             val articles = newsResponse?.response?.results
-             if (articles != null && articles.isNotEmpty()) {
-                 newsDao.clearAll()
-                 newsDao.insert(articles)
-             }
-         }
-     }*//*
-
-    override suspend fun getNewsApi(page: Int): List<ModelApi>? {
-        var articles: List<ModelApi>? = null
-        if (hasNetwork(context)) {
-            val newsResponse = safeApiCall(
-                call = { newsApi.getNewsAsync(page).await() },
-                errorMessage = context.getString(R.string.error)
-            )
-            newsResponse?.response?.results?.let { articles = it }
-        }
-        return articles
-    }
-
-    override fun getSavedArticle(id: String): ModelDb? = newsDao.getArticle(id)
-
-    override fun getFavourites(): LiveData<List<ModelDb>> = newsDao.getAll()
-
-    override suspend fun save(article: ModelDb) = newsDao.insert(article)
-
-    override suspend fun remove(id: String) = newsDao.removeFavourite(id)
-
-    override suspend fun clearAll() = newsDao.clearAll()*/
 }
+
