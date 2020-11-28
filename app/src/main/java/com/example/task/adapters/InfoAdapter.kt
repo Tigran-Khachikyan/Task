@@ -1,6 +1,5 @@
 package com.example.task.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,12 +26,10 @@ class InfoAdapter(
         fun bind(info: Info) {
             binding.tvInfoId.text = (layoutPosition + 1).toString()
             binding.tvInfoTitle.text = info.title
-            Log.d("jahsdkasd", "thumbnailUrl: ${info.thumbnailUrl}")
-            Log.d("jahsdkasd", "url: ${info.url}")
             Picasso.get()
                 .load(info.thumbnailUrl)
                 .placeholder(R.drawable.ic_image_placeholder)
-                .into(binding.ivPhotoInto);
+                .into(binding.ivPhotoInto)
 
             binding.ivPhotoInto.setOnClickListener { openPhoto(infoList?.get(layoutPosition)) }
         }

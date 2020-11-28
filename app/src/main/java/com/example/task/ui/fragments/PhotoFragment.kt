@@ -59,6 +59,7 @@ class PhotoFragment : Fragment(), CoroutineScope {
         activityViewModel.permissionState().observe(viewLifecycleOwner, { result ->
             result?.let { if (it && info != null) downloadImage(info!!.url) }
         })
+        photoViewModel.status.observe(viewLifecycleOwner, { showRequestState(it) })
     }
 
     override fun onResume() {
@@ -105,36 +106,40 @@ class PhotoFragment : Fragment(), CoroutineScope {
             )
             return
         }
-
         progressPhoto.show()
         tvStatusPhoto.showStatus(R.string.downloading)
         btnDownload.isEnabled = false
-        photoViewModel.downloadImage(url).observe(viewLifecycleOwner, { status ->
-            status?.let {
-                if (it) finishDownloadingSuccessfully()
-                else showDownloadError()
-            }
-        })
+        photoViewModel.downloadImage(url)
     }
 
-    private fun finishDownloadingSuccessfully() {
-        launch {
-            progressPhoto.hide()
-            tvStatusPhoto.hide()
-            btnDownload.animate().alpha(0f).setDuration(1000).start()
-            lottie_download.setAnimation(R.raw.lottie_download)
-            lottie_download.visibility = View.VISIBLE
-            delay(3500)
-            lottie_download.visibility = View.GONE
-            delay(300)
+    private fun showRequestState(status: IoTransactionsState) {
+        when (status) {
+            IoTransactionsState.NO_NETWORK -> {
+                progressPhoto.hide()
+                tvStatusPhoto.showStatus(R.string.noNetwork)
+            }
+            IoTransactionsState.DOWNLOADING_SUCCEED -> {
+                launch {
+                    progressPhoto.hide()
+                    tvStatusPhoto.hide()
+                    btnDownload.animate().alpha(0f).setDuration(1000).start()
+                    lottie_download.setAnimation(R.raw.lottie_download)
+                    lottie_download.visibility = View.VISIBLE
+                    delay(3500)
+                    lottie_download.visibility = View.GONE
+                    delay(300)
+                }
+            }
+            IoTransactionsState.DOWNLOADING_FAILED -> {
+                Toast.makeText(requireContext(), R.string.downloadingFailed, Toast.LENGTH_LONG)
+                    .show()
+                progressPhoto.hide()
+                tvStatusPhoto.hide()
+            }
+            else -> return
         }
     }
 
-    private fun showDownloadError() {
-        Toast.makeText(requireContext(), R.string.downloadingFailed, Toast.LENGTH_LONG).show()
-        progressPhoto.hide()
-        tvStatusPhoto.hide()
-    }
 
     private fun zoomIn(url: String) {
         if (height > 0 && width > 0) {

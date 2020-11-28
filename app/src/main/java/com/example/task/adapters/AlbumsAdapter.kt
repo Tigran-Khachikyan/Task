@@ -59,8 +59,8 @@ sealed class AlbumsAdapter(
             binding.icManipulate.setOnClickListener {
                 remove?.run {
                     val albumId = albums?.get(layoutPosition)?.id
-                    if (albumId != null) {
-                        invoke(layoutPosition, albumId)
+                    albumId?.let {
+                        invoke(layoutPosition, it)
                         iconEnabled = false
                     }
                 }

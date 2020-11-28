@@ -11,5 +11,5 @@ interface AppRepository {
     suspend fun getAlbumInfoFromDb(albumId: Int): List<Info>?
     suspend fun getAlbumInfoFromServer(albumId: Int): Response<List<Info>?>
     suspend fun save(album: Album, info: List<Info>)
-    suspend fun remove(albumId: Int): Boolean
+    suspend fun remove(albumId: Int)
 }

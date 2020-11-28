@@ -1,56 +1,79 @@
 package com.example.task.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.task.data.repository.Repository
+import com.example.task.isNetworkAvailable
 import com.example.task.model.Album
 import com.example.task.model.Info
+import com.example.task.ui.IoTransactionsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InfoViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val context by lazy { application }
     private val repository: Repository by lazy { Repository(application) }
 
     private val infoSavedLoaded by lazy { MutableLiveData<Pair<Boolean, List<Info>?>>() }
-    private val loadTrigger by lazy { MutableLiveData<Int>() }
-    val error by lazy { MutableLiveData<String?>() }
+    val status by lazy { MutableLiveData<IoTransactionsState>() }
+
+    private val isTriggerOnLoad by lazy { MutableLiveData<Pair<Boolean, Int>>() }
+
+    fun load(albumId: Int) {
+        isTriggerOnLoad.value = Pair(false, albumId)
+    }
+
+    fun refresh(albumId: Int) {
+        isTriggerOnLoad.value = Pair(true, albumId)
+    }
 
 
-    private fun loadInfo(albumId: Int) {
-        Log.d("kbdja644", "albumId : $albumId")
+    private fun loadInfo(onlyNew: Boolean, albumId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
 
-            // first trying to get info from db if exists
-            val infoFromDb = repository.getAlbumInfoFromDb(albumId)
-            infoFromDb?.let {
-                if (it.isNotEmpty()) {
-                    Log.d("kbdja644", "infoFromDb.size() : ${it.size}")
-
-                    withContext(Dispatchers.Main) {
-                        error.value = null
-                        infoSavedLoaded.value = Pair(true, it)
+            if (!onlyNew) {
+                // first trying to get info from db if exists
+                val infoFromDb = repository.getAlbumInfoFromDb(albumId)
+                infoFromDb?.let {
+                    if (it.isNotEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            status.value = IoTransactionsState.LOADING_SUCCEED
+                            infoSavedLoaded.value = Pair(true, it)
+                        }
+                        return@launch
                     }
-                    return@launch
                 }
             }
 
             // trying to get info from server
-            val response = repository.getAlbumInfoFromServer(albumId)
-            if (response.isSuccessful) {
-                val info = response.body()
-                Log.d("kbdja644", "info.size() : ${info?.size}")
-
-                withContext(Dispatchers.Main) {
-                    error.value = null
-                    infoSavedLoaded.value = Pair(false, info)
-                }
-            } else {
-                val message = response.message()
-                withContext(Dispatchers.Main) {
-                    error.value = message
+            // check network state
+            withContext(Dispatchers.Main) {
+                if (!isNetworkAvailable(context)) {
+                    status.value = IoTransactionsState.NO_NETWORK
+                    return@withContext
+                } else {
+                    withContext(Dispatchers.IO) {
+                        try {
+                            val response = repository.getAlbumInfoFromServer(albumId)
+                            if (response.isSuccessful) {
+                                val info = response.body()
+                                withContext(Dispatchers.Main) {
+                                    status.value = IoTransactionsState.LOADING_SUCCEED
+                                    infoSavedLoaded.value = Pair(false, info)
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    status.value = IoTransactionsState.LOADING_ERROR
+                                }
+                            }
+                        } catch (ex: Exception) {
+                            withContext(Dispatchers.Main) {
+                                status.value = IoTransactionsState.LOADING_ERROR
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -62,24 +85,24 @@ class InfoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun loadOrRefresh(albumId: Int) {
-        loadTrigger.value = albumId
-    }
-
-    val albumInfo: LiveData<Pair<Boolean, List<Info>?>> = loadTrigger.switchMap {
-        loadInfo(it)
+    val albumInfo: LiveData<Pair<Boolean, List<Info>?>> = isTriggerOnLoad.switchMap {
+        loadInfo(it.first, it.second)
         infoSavedLoaded
     }
 
-    private val removeSucceed = MutableLiveData<Boolean>()
-    fun remove(albumId: Int): LiveData<Boolean> {
+    fun remove(albumId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val succeed  = repository.remove(albumId)
-            withContext(Dispatchers.Main){
-                removeSucceed.value = succeed
+            try {
+                repository.remove(albumId)
+                withContext(Dispatchers.Main) {
+                    status.value = IoTransactionsState.REMOVING_SUCCEED
+                }
+            } catch (ex: Exception) {
+                withContext(Dispatchers.Main) {
+                    status.value = IoTransactionsState.REMOVING_FAILED
+                }
             }
         }
-        return removeSucceed
     }
 
 }

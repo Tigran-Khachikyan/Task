@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.task.data.repository.Repository
 import com.example.task.model.Album
+import com.example.task.ui.IoTransactionsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 class SavedAlbumsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -16,28 +18,39 @@ class SavedAlbumsViewModel(application: Application) : AndroidViewModel(applicat
     private val albumList = MutableLiveData<List<Album>?>()
 
     private fun loadAlbums() {
-        Log.d("kbdja644", "loadAlbums")
         viewModelScope.launch(Dispatchers.IO) {
-            val saved = repository.getSavedAlbums()
-            withContext(Dispatchers.Main) {
-                albumList.value = saved
+            try {
+                val saved = repository.getSavedAlbums()
+                withContext(Dispatchers.Main) {
+                    albumList.value = saved
+                    status.value = IoTransactionsState.LOADING_SUCCEED
+                }
+            } catch (ex: Exception) {
+                withContext(Dispatchers.Main) {
+                    status.value = IoTransactionsState.LOADING_ERROR
+                }
             }
         }
     }
 
-    fun loadOrRefresh() {
+    fun load() {
         refreshTrigger.value = Unit
     }
 
-    private val removeSucceed = MutableLiveData<Boolean>()
-    fun remove(id: Int): LiveData<Boolean> {
+    val status = MutableLiveData<IoTransactionsState>()
+    fun remove(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val succeed  = repository.remove(id)
-            withContext(Dispatchers.Main){
-                removeSucceed.value = succeed
+            try {
+                repository.remove(id)
+                withContext(Dispatchers.Main) {
+                    status.value = IoTransactionsState.REMOVING_SUCCEED
+                }
+            } catch (ex: Exception) {
+                withContext(Dispatchers.Main) {
+                    status.value = IoTransactionsState.REMOVING_FAILED
+                }
             }
         }
-        return removeSucceed
     }
 
     private val refreshTrigger = MutableLiveData<Unit>()
