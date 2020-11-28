@@ -19,7 +19,7 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 
-class InfoListFragment() : Fragment(), CoroutineScope {
+class InfoListFragment : Fragment(), CoroutineScope {
 
     private val job: Job by lazy { Job() }
     override val coroutineContext: CoroutineContext
@@ -65,6 +65,10 @@ class InfoListFragment() : Fragment(), CoroutineScope {
 
         binding.swipeRefreshInfo.setOnRefreshListener { refresh() }
         binding.recInfo.setHasFixedSize(true)
+        album?.run {
+            val albTitle = getString(R.string.album) + ": " + title
+            binding.tvAlbumSelected.text = albTitle
+        }
         adapter = InfoAdapter(null) { openPhoto(it) }
         binding.recInfo.adapter = adapter
         fromSavedFolder?.let { removable ->

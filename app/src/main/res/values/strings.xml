@@ -1,24 +1,14 @@
 <resources>
     <string name="app_name">Task</string>
-    <string name="title">Guardian News</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="tab_text_1">All</string>
-    <string name="tab_text_2">Service</string>
-    <string name="published">Published at</string>
-    <string name="cancel">Cancel</string>
+    <string name="tab_text_3">Service</string>
     <string name="remove">Remove</string>
-    <string name="warningText">Do you want to clear favourite list?</string>
-    <string name="warning">Warning!</string>
-    <string name="error">Error Fetching News!</string>
-    <string name="noFavouriteFound">No favourite article!</string>
-    <string name="noArticleFound">No article found.\n Check network connection!</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
     <string name="error_loading">Error occurred during loading</string>
     <string name="error_removing">Removing failed!</string>
     <string name="albums">Albums</string>
+    <string name="album">Album</string>
     <string name="albumInfo">Album information</string>
     <string name="loading">Loading…</string>
     <string name="refreshing">Refreshing…</string>
@@ -32,4 +22,5 @@
     <string name="downloadingFailed">Downloading failed!</string>
     <string name="zoom">zoom</string>
     <string name="noNetwork">No network connection!</string>
+    <string name="tab_text_2">Favourites</string>
 </resources>
