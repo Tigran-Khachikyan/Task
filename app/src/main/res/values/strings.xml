@@ -26,8 +26,10 @@
     <string name="removing">Removing</string>
     <string name="successRemoved">Album Successfully removed!</string>
     <string name="noSavedAlbums">No saved albums!</string>
+    <string name="noAlbums">No albums!</string>
     <string name="download">Download</string>
     <string name="downloading">Downloading…</string>
     <string name="downloadingFailed">Downloading failed!</string>
     <string name="zoom">zoom</string>
+    <string name="noNetwork">No network connection!</string>
 </resources>

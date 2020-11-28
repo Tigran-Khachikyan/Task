@@ -1,6 +1,7 @@
 package com.example.task.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.task.BUNDLE_KEY_ALBUM
-import com.example.task.BUNDLE_KEY_FROM_SAVED_FOLDER
-import com.example.task.BUNDLE_KEY_INFO
-import com.example.task.R
+import com.example.task.*
 import com.example.task.adapters.InfoAdapter
 import com.example.task.databinding.FragmentInfoListBinding
 import com.example.task.model.Album
@@ -61,7 +59,7 @@ class InfoListFragment() : Fragment(), CoroutineScope {
             if (it.first) showSavedInfo(it.second)   // from database
             else showLoadedInfo(it.second)           //from server
         })
-        viewModel.error.observe(viewLifecycleOwner, { showError(it) })
+        viewModel.status.observe(viewLifecycleOwner, { showRequestState(it) })
     }
 
     private fun initViews() {
@@ -91,20 +89,17 @@ class InfoListFragment() : Fragment(), CoroutineScope {
         binding.progress.show()
         binding.tvStatus.showStatus(R.string.loading)
         album?.run {
-            viewModel.loadOrRefresh(id)
+            viewModel.load(id)
         }
     }
 
     private fun showSavedInfo(info: List<Info>?) {
         info?.let {
             infoList = info
-            binding.progress.hide()
-            binding.tvStatus.hide()
-            binding.swipeRefreshInfo.isRefreshing = false
             adapter.setAlbums(it)
             binding.icStatusSaved.visibility = View.VISIBLE
-            fromSavedFolder?.let {
-                binding.btnSaveRemove.visibility = if (it) View.VISIBLE else View.GONE
+            fromSavedFolder?.let { f ->
+                binding.btnSaveRemove.visibility = if (f) View.VISIBLE else View.GONE
             }
         }
     }
@@ -112,29 +107,61 @@ class InfoListFragment() : Fragment(), CoroutineScope {
     private fun showLoadedInfo(info: List<Info>?) {
         info?.let {
             infoList = info
-            binding.progress.hide()
-            binding.tvStatus.hide()
-            binding.swipeRefreshInfo.isRefreshing = false
             adapter.setAlbums(it)
             binding.icStatusSaved.visibility = View.GONE
             binding.btnSaveRemove.visibility = View.VISIBLE
         }
     }
 
-    private fun showError(message: String?) {
-        message?.let {
-            binding.progress.hide()
-            binding.swipeRefreshInfo.isRefreshing = false
-            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            binding.tvStatus.showStatus(R.string.error_loading)
-            binding.btnSaveRemove.visibility = View.GONE
+    private fun showRequestState(status: IoTransactionsState) {
+        when (status) {
+            IoTransactionsState.LOADING_ERROR -> {
+                binding.progress.hide()
+                binding.swipeRefreshInfo.isRefreshing = false
+                binding.tvStatus.showStatus(R.string.error_loading)
+                binding.btnSaveRemove.visibility = View.GONE
+            }
+            IoTransactionsState.LOADING_SUCCEED -> {
+                binding.progress.hide()
+                binding.tvStatus.hide()
+                binding.swipeRefreshInfo.isRefreshing = false
+            }
+            IoTransactionsState.NO_NETWORK -> {
+                binding.progress.hide()
+                binding.swipeRefreshInfo.isRefreshing = false
+                binding.tvStatus.showStatus(R.string.noNetwork)
+            }
+            IoTransactionsState.REMOVING_SUCCEED -> {
+                binding.progress.hide()
+                binding.tvStatus.hide()
+                launch {
+                    binding.lottieSaveRemove.setAnimation(R.raw.lottie_remove)
+                    binding.lottieSaveRemove.visibility = View.VISIBLE
+                    binding.btnSaveRemove.animate().alpha(0f).setDuration(1500).start()
+                    delay(3000)
+                    binding.icStatusSaved.visibility = View.GONE
+                    delay(500)
+                    binding.lottieSaveRemove.visibility = View.GONE
+                    delay(300)
+                    findNavController().popBackStack()
+                    Log.d("lkhaskdj"," findNavController().popBackStack()")
+                }
+            }
+            IoTransactionsState.REMOVING_FAILED -> {
+                binding.progress.hide()
+                binding.tvStatus.hide()
+                binding.btnSaveRemove.isEnabled = true
+                Toast.makeText(requireContext(), R.string.error_removing, Toast.LENGTH_LONG).show()
+            }
+            else -> return
         }
+
     }
 
     private fun refresh() {
         binding.tvStatus.showStatus(R.string.refreshing)
         album?.run {
-            viewModel.loadOrRefresh(id)
+            viewModel.refresh(id)
         }
     }
 
@@ -161,35 +188,8 @@ class InfoListFragment() : Fragment(), CoroutineScope {
             binding.progress.show()
             binding.tvStatus.showStatus(R.string.removing)
             binding.btnSaveRemove.isEnabled = false
-            viewModel.remove(id).observe(viewLifecycleOwner, { succeed ->
-                if (succeed) finishRemoving()
-                else showError()
-            })
+            viewModel.remove(id)
         }
     }
-
-    private fun showError() {
-        binding.progress.hide()
-        binding.tvStatus.hide()
-        binding.btnSaveRemove.isEnabled = true
-        Toast.makeText(requireContext(), R.string.error_removing, Toast.LENGTH_LONG).show()
-    }
-
-    private fun finishRemoving() {
-        binding.progress.hide()
-        binding.tvStatus.hide()
-        launch {
-            binding.lottieSaveRemove.setAnimation(R.raw.lottie_remove)
-            binding.lottieSaveRemove.visibility = View.VISIBLE
-            binding.btnSaveRemove.animate().alpha(0f).setDuration(1500).start()
-            delay(3000)
-            binding.icStatusSaved.visibility = View.GONE
-            delay(500)
-            binding.lottieSaveRemove.visibility = View.GONE
-            delay(300)
-            activity?.onBackPressed()
-        }
-    }
-
 
 }

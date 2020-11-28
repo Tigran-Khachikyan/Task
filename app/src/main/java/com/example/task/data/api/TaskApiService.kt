@@ -2,7 +2,6 @@ package com.example.task.data.api
 
 import com.example.task.model.Album
 import com.example.task.model.Info
-import io.reactivex.Observable
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET

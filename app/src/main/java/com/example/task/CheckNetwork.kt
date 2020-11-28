@@ -5,9 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 
-fun isNetworkAvailable(context: Context?): Boolean {
+fun isNetworkAvailable(context: Context): Boolean {
 
-    if (context == null) return false
     val conManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         val capabilities = conManager.getNetworkCapabilities(conManager.activeNetwork)

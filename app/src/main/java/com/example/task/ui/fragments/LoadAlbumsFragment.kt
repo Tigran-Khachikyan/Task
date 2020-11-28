@@ -14,6 +14,7 @@ import com.example.task.R
 import com.example.task.adapters.AlbumsAdapter
 import com.example.task.databinding.FragmentAlbumBinding
 import com.example.task.model.Album
+import com.example.task.ui.IoTransactionsState
 import com.example.task.ui.hide
 import com.example.task.ui.show
 import com.example.task.ui.showStatus
@@ -40,7 +41,7 @@ class LoadAlbumsFragment : Fragment() {
         initViews()
         load()
         viewModel.albums.observe(viewLifecycleOwner, { showAlbums(it) })
-        viewModel.error.observe(viewLifecycleOwner, { showError(it) })
+        viewModel.status.observe(viewLifecycleOwner, { showRequestState(it) })
     }
 
     private fun initViews() {
@@ -60,34 +61,41 @@ class LoadAlbumsFragment : Fragment() {
         )
     }
 
+    private fun showAlbums(albums: List<Album>?) {
+        adapter.setAlbums(albums)
+        if (albums == null || albums.isEmpty())
+            Toast.makeText(requireContext(), R.string.noAlbums, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showRequestState(status: IoTransactionsState) {
+        when (status) {
+            IoTransactionsState.LOADING_ERROR -> {
+                binding.progress.hide()
+                binding.swipeRefreshAlbums.isRefreshing = false
+                binding.tvStatus.showStatus(R.string.error_loading)
+            }
+            IoTransactionsState.LOADING_SUCCEED -> {
+                binding.progress.hide()
+                binding.tvStatus.hide()
+                binding.swipeRefreshAlbums.isRefreshing = false
+            }
+            IoTransactionsState.NO_NETWORK -> {
+                binding.progress.hide()
+                binding.swipeRefreshAlbums.isRefreshing = false
+                binding.tvStatus.showStatus(R.string.noNetwork)
+            }
+            else -> return
+        }
+    }
+
     private fun load() {
         binding.progress.show()
         binding.tvStatus.showStatus(R.string.loading)
         viewModel.loadOrRefresh()
     }
 
-    private fun showAlbums(albums: List<Album>?) {
-        albums?.let {
-            binding.progress.hide()
-            binding.tvStatus.hide()
-            binding.swipeRefreshAlbums.isRefreshing = false
-            adapter.setAlbums(it)
-        }
-    }
-
-    private fun showError(message: String?) {
-        message?.let {
-            binding.progress.hide()
-            binding.swipeRefreshAlbums.isRefreshing = false
-            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            binding.tvStatus.showStatus(R.string.error_loading)
-        }
-    }
-
     private fun refresh() {
         binding.tvStatus.showStatus(R.string.refreshing)
         viewModel.loadOrRefresh()
     }
-
-
 }

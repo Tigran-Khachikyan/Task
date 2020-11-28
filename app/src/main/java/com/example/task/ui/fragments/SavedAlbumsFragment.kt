@@ -15,12 +15,11 @@ import com.example.task.R
 import com.example.task.adapters.AlbumsAdapter
 import com.example.task.databinding.FragmentAlbumBinding
 import com.example.task.model.Album
+import com.example.task.ui.IoTransactionsState
 import com.example.task.ui.hide
 import com.example.task.ui.show
 import com.example.task.ui.showStatus
 import com.example.task.ui.viewmodels.SavedAlbumsViewModel
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 class SavedAlbumsFragment : Fragment() {
 
@@ -44,6 +43,7 @@ class SavedAlbumsFragment : Fragment() {
         initViews()
         load()
         viewModel.albums.observe(viewLifecycleOwner, { showAlbums(it) })
+        viewModel.status.observe(viewLifecycleOwner, { showRequestState(it) })
     }
 
     private fun initViews() {
@@ -70,8 +70,7 @@ class SavedAlbumsFragment : Fragment() {
     private fun load() {
         binding.progress.show()
         binding.tvStatus.showStatus(R.string.loading)
-        viewModel.loadOrRefresh()
-        Log.d("kbdja644", "load()")
+        viewModel.load()
     }
 
     private fun showAlbums(albums: List<Album>?) {
@@ -79,36 +78,46 @@ class SavedAlbumsFragment : Fragment() {
             binding.tvStatus.hide()
         else
             binding.tvStatus.showStatus(R.string.noSavedAlbums)
-
-        binding.progress.hide()
         adapter.setAlbums(albums)
-    }
-
-    private fun showError() {
-        binding.progress.hide()
-        binding.tvStatus.hide()
-        adapter.enableIconRemove()
-        Toast.makeText(requireContext(), R.string.error_removing, Toast.LENGTH_LONG).show()
     }
 
     private fun remove(albumId: Int) {
         binding.progress.show()
         binding.tvStatus.showStatus(R.string.removing)
-        viewModel.remove(albumId).observe(viewLifecycleOwner, { succeed ->
-            if (succeed) finishRemoving()
-            else showError()
-        })
+        viewModel.remove(albumId)
     }
 
-    private fun finishRemoving() {
-        deletedAlbumPosition?.let {
-            binding.progress.hide()
-            binding.tvStatus.hide()
-            val wasTheLastAlbum = adapter.removeAlbum(it)
-            wasTheLastAlbum?.let { if (it) binding.tvStatus.showStatus(R.string.noSavedAlbums) }
-            Toast.makeText(requireContext(), R.string.successRemoved, Toast.LENGTH_SHORT).show()
-            deletedAlbumPosition = null
+    private fun showRequestState(status: IoTransactionsState) {
+        Log.d("askjbasd", "status : $status")
+
+        when (status) {
+            IoTransactionsState.LOADING_SUCCEED -> {
+                binding.progress.hide()
+            }
+            IoTransactionsState.LOADING_ERROR -> {
+                binding.progress.hide()
+                binding.tvStatus.showStatus(R.string.error_loading)
+            }
+            IoTransactionsState.REMOVING_SUCCEED -> {
+                deletedAlbumPosition?.let {
+                    binding.progress.hide()
+                    binding.tvStatus.hide()
+                    val wasTheLastAlbum = adapter.removeAlbum(it)
+                    wasTheLastAlbum?.let { if (it) binding.tvStatus.showStatus(R.string.noSavedAlbums) }
+                    Toast.makeText(requireContext(), R.string.successRemoved, Toast.LENGTH_SHORT)
+                        .show()
+                    deletedAlbumPosition = null
+                }
+            }
+            IoTransactionsState.REMOVING_FAILED -> {
+                binding.progress.hide()
+                binding.tvStatus.hide()
+                adapter.enableIconRemove()
+                Toast.makeText(requireContext(), R.string.error_removing, Toast.LENGTH_LONG).show()
+            }
+            else -> return
         }
     }
+
 
 }

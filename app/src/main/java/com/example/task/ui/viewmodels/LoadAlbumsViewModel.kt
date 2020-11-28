@@ -1,34 +1,44 @@
 package com.example.task.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.task.data.repository.Repository
+import com.example.task.isNetworkAvailable
 import com.example.task.model.Album
+import com.example.task.ui.IoTransactionsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoadAlbumsViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val context by lazy { application }
     private val repository: Repository by lazy { Repository(application) }
 
     private val albumList = MutableLiveData<List<Album>?>()
 
     private fun loadAlbums() {
-        Log.d("kbdja644", "loadAlbums")
+        if (!isNetworkAvailable(context)) {
+            status.value = IoTransactionsState.NO_NETWORK
+            return
+        }
         viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.getAlbumsFromServer()
-            if (response.isSuccessful) {
-                val albums = response.body()
-                withContext(Dispatchers.Main) {
-                    albumList.value = albums
-                    error.value = null
+            try {
+                val response = repository.getAlbumsFromServer()
+                if (response.isSuccessful) {
+                    val albums = response.body()
+                    withContext(Dispatchers.Main) {
+                        albumList.value = albums
+                        status.value = IoTransactionsState.LOADING_SUCCEED
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        status.value = IoTransactionsState.LOADING_ERROR
+                    }
                 }
-            } else {
-                val message = response.message()
+            } catch (ex: Exception) {
                 withContext(Dispatchers.Main) {
-                    error.value = message
+                    status.value = IoTransactionsState.LOADING_ERROR
                 }
             }
         }
@@ -40,7 +50,7 @@ class LoadAlbumsViewModel(application: Application) : AndroidViewModel(applicati
         loadTrigger.value = Unit
     }
 
-    val error = MutableLiveData<String?>()
+    val status = MutableLiveData<IoTransactionsState>()
     val albums: LiveData<List<Album>?> = loadTrigger.switchMap {
         loadAlbums()
         albumList
