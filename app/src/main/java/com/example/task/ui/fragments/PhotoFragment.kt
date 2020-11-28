@@ -11,10 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.task.BUNDLE_KEY_INFO
-import com.example.task.R
-import com.example.task.REQUEST_PERMISSION_CODE
-import com.example.task.ZOOM_CHANGE_SIZE
+import com.example.task.*
 import com.example.task.model.Info
 import com.example.task.ui.*
 import com.example.task.ui.viewmodels.ActivityViewModel

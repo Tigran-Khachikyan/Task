@@ -1,7 +1,6 @@
 package com.example.task.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -144,7 +143,6 @@ class InfoListFragment() : Fragment(), CoroutineScope {
                     binding.lottieSaveRemove.visibility = View.GONE
                     delay(300)
                     findNavController().popBackStack()
-                    Log.d("lkhaskdj"," findNavController().popBackStack()")
                 }
             }
             IoTransactionsState.REMOVING_FAILED -> {

@@ -3,7 +3,7 @@
     <string name="title">Guardian News</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="tab_text_1">All</string>
-    <string name="tab_text_2">Favourite</string>
+    <string name="tab_text_2">Service</string>
     <string name="published">Published at</string>
     <string name="cancel">Cancel</string>
     <string name="remove">Remove</string>

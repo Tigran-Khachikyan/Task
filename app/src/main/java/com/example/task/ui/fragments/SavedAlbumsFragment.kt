@@ -1,7 +1,6 @@
 package com.example.task.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.task.BUNDLE_KEY_ALBUM
-import com.example.task.BUNDLE_KEY_FROM_SAVED_FOLDER
-import com.example.task.R
+import com.example.task.*
 import com.example.task.adapters.AlbumsAdapter
 import com.example.task.databinding.FragmentAlbumBinding
 import com.example.task.model.Album
 import com.example.task.ui.IoTransactionsState
-import com.example.task.ui.hide
-import com.example.task.ui.show
-import com.example.task.ui.showStatus
 import com.example.task.ui.viewmodels.SavedAlbumsViewModel
 
 class SavedAlbumsFragment : Fragment() {
@@ -88,7 +82,6 @@ class SavedAlbumsFragment : Fragment() {
     }
 
     private fun showRequestState(status: IoTransactionsState) {
-        Log.d("askjbasd", "status : $status")
 
         when (status) {
             IoTransactionsState.LOADING_SUCCEED -> {

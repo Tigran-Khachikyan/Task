@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.task.R
 import com.example.task.ui.fragments.LoadAlbumsFragment
 import com.example.task.ui.fragments.SavedAlbumsFragment
+import com.example.task.ui.fragments.ServiceFragment
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
@@ -21,11 +22,11 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
         return when (position) {
             0 -> LoadAlbumsFragment()
             1 -> SavedAlbumsFragment()
-            else -> LoadAlbumsFragment()
+            else -> ServiceFragment()
         }
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): CharSequence {
         return context.resources.getString(TAB_TITLES[position])
     }
 

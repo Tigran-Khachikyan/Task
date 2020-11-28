@@ -1,15 +1,10 @@
-package com.example.task.ui
+package com.example.task
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.view.ViewCompat
-import com.example.task.R
-import kotlinx.coroutines.delay
 
 fun ProgressBar.show() {
     visibility = View.VISIBLE

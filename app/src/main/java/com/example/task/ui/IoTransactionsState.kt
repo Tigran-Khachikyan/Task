@@ -7,6 +7,5 @@ enum class IoTransactionsState {
     REMOVING_FAILED,
     DOWNLOADING_SUCCEED,
     DOWNLOADING_FAILED,
-    NO_NETWORK,
-    NONE
+    NO_NETWORK
 }

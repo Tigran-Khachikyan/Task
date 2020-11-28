@@ -16,7 +16,6 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="0dp"
             android:layout_height="64dp"
-            android:text="Album : ajshdasdblasbdljasdasd"
             app:layout_constraintLeft_toLeftOf="parent"
             android:padding="4dp"
             app:layout_constraintRight_toLeftOf="@id/icStatusSaved"
