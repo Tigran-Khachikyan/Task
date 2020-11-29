@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.task.ACTION_OPEN_LOCATION_ON_NOTIFICATION_CLICK
 import com.example.task.R
 import com.example.task.databinding.FragmentHomeBinding
+import com.example.task.ui.MainActivity
 import com.example.task.ui.SectionsPagerAdapter
 
 class HomeFragment : Fragment() {
@@ -27,5 +29,14 @@ class HomeFragment : Fragment() {
         val sectionsPagerAdapter = SectionsPagerAdapter(requireContext(), childFragmentManager)
         binding.viewPager.adapter = sectionsPagerAdapter
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+        if ((requireActivity() as MainActivity).intent.action ==
+            ACTION_OPEN_LOCATION_ON_NOTIFICATION_CLICK
+        )
+            openServiceFragment()
+    }
+
+    private fun openServiceFragment() {
+        binding.tabLayout.getTabAt(2)?.select()
     }
 }

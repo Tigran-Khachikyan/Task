@@ -1,10 +1,15 @@
 package com.example.task
 
+import android.app.ActivityManager
+import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getSystemService
+
 
 fun ProgressBar.show() {
     visibility = View.VISIBLE
@@ -23,14 +28,10 @@ fun TextView.hide() {
     visibility = View.GONE
 }
 
-fun Button.makeSaver() {
-    setText(R.string.save)
-    setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_star,0)
-}
 
-fun Button.makeRemoving() {
-    setText(R.string.remove)
-    setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_trash_mini,0)
+fun Button.customize(resText: Int, resDrawable: Int) {
+    setText(resText)
+    setCompoundDrawablesWithIntrinsicBounds(0, 0, resDrawable, 0)
 }
 
 fun View.onInitialized(onInit: () -> Unit) {
@@ -42,5 +43,15 @@ fun View.onInitialized(onInit: () -> Unit) {
             }
         }
     })
+}
+
+fun isMyServiceRunning(serviceClass: Class<*>, context: Context): Boolean {
+    val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager?
+    for (service in manager!!.getRunningServices(Int.MAX_VALUE)) {
+        if (serviceClass.name == service.service.className) {
+            return true
+        }
+    }
+    return false
 }
 

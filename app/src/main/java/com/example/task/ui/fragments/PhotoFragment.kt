@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.task.*
 import com.example.task.model.Info
 import com.example.task.ui.*
-import com.example.task.ui.viewmodels.ActivityViewModel
+import com.example.task.ui.viewmodels.PermissionsViewModel
 import com.example.task.ui.viewmodels.PhotoViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_photo.*
@@ -29,7 +29,7 @@ class PhotoFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
     private lateinit var photoViewModel: PhotoViewModel
-    private lateinit var activityViewModel: ActivityViewModel
+    private lateinit var activityViewModel: PermissionsViewModel
     private val info: Info? by lazy { arguments?.getParcelable(BUNDLE_KEY_INFO) }
     private lateinit var activity: MainActivity
     private var height: Int = 0
@@ -46,7 +46,7 @@ class PhotoFragment : Fragment(), CoroutineScope {
     ): View? {
         // Inflate the layout for this fragment
         photoViewModel = ViewModelProvider(this).get(PhotoViewModel::class.java)
-        activityViewModel = ViewModelProvider(activity).get(ActivityViewModel::class.java)
+        activityViewModel = ViewModelProvider(activity).get(PermissionsViewModel::class.java)
         return inflater.inflate(R.layout.fragment_photo, container, false)
     }
 
@@ -54,9 +54,7 @@ class PhotoFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        activityViewModel.permissionState().observe(viewLifecycleOwner, { result ->
-            result?.let { if (it && info != null) downloadImage(info!!.url) }
-        })
+        activityViewModel.isStoragePermissionGranted().observe(viewLifecycleOwner, {  if (it && info != null) downloadImage(info!!.url) })
         photoViewModel.status.observe(viewLifecycleOwner, { showRequestState(it) })
     }
 
@@ -100,7 +98,7 @@ class PhotoFragment : Fragment(), CoroutineScope {
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE
+                REQUEST_CODE_PERMISSION_WRITE_STORAGE
             )
             return
         }

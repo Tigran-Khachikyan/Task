@@ -72,7 +72,8 @@ class InfoListFragment : Fragment(), CoroutineScope {
         adapter = InfoAdapter(null) { openPhoto(it) }
         binding.recInfo.adapter = adapter
         fromSavedFolder?.let { removable ->
-            if (removable) binding.btnSaveRemove.makeRemoving() else binding.btnSaveRemove.makeSaver()
+            if (removable) binding.btnSaveRemove.customize(R.string.remove,R.drawable.ic_trash_mini)
+            else binding.btnSaveRemove.customize(R.string.save,R.drawable.ic_star)
             binding.btnSaveRemove.setOnClickListener { if (removable) remove() else save() }
         }
     }

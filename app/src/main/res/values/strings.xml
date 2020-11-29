@@ -23,4 +23,13 @@
     <string name="zoom">zoom</string>
     <string name="noNetwork">No network connection!</string>
     <string name="tab_text_2">Favourites</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="region">Region</string>
+    <string name="country">Country</string>
+    <string name="lat_long">Latitude and Longitude</string>
+    <string name="location_and_audio_player_service">Location and audio player service</string>
+    <string name="startToGetLocation">Click on Start button \nto get your current location!</string>
 </resources>
