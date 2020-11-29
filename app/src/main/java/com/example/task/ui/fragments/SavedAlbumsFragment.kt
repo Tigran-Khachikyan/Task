@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.task.*
-import com.example.task.adapters.AlbumsAdapter
+import com.example.task.ui.adapters.AlbumsAdapter
 import com.example.task.databinding.FragmentAlbumBinding
 import com.example.task.model.Album
 import com.example.task.ui.IoTransactionsState

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.task.*
-import com.example.task.adapters.InfoAdapter
+import com.example.task.ui.adapters.InfoAdapter
 import com.example.task.databinding.FragmentInfoListBinding
 import com.example.task.model.Album
 import com.example.task.model.Info

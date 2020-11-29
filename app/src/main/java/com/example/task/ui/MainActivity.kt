@@ -20,8 +20,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == REQUEST_PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            viewModel.grantPermission()
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                viewModel.grantPermission()
+        }
     }
 
 }
