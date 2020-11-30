@@ -6,17 +6,17 @@ import androidx.lifecycle.ViewModel
 
 class PermissionsViewModel : ViewModel() {
 
-    private val permissionWriteStorage by lazy { MutableLiveData<Boolean>() }
+    private val permissionWriteStorage by lazy { MutableLiveData<Unit>() }
     fun grantPermissionWriteStorage() {
-        permissionWriteStorage.value = true
+        permissionWriteStorage.value = Unit
     }
 
-    fun isStoragePermissionGranted(): LiveData<Boolean> = permissionWriteStorage
+    fun isStoragePermissionGranted(): LiveData<Unit> = permissionWriteStorage
 
-    private val permissionLocation by lazy { MutableLiveData<Boolean>() }
-    fun grantPermissionLocation() {
-        permissionLocation.value = true
+    private val permissionLocation by lazy { MutableLiveData<Unit>() }
+    fun grantLocationPermission() {
+        permissionLocation.value = Unit
     }
 
-    fun isLocationPermissionGranted(): LiveData<Boolean> = permissionLocation
+    fun isLocationPermissionGranted(): LiveData<Unit> = permissionLocation
 }

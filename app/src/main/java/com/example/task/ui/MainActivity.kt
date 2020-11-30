@@ -29,12 +29,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 run breaker@{
                     grantResults.forEach {
                         if (it == PackageManager.PERMISSION_GRANTED) {
-                            viewModel.grantPermissionLocation()
+                            viewModel.grantLocationPermission()
                             return@breaker
                         }
                     }
                 }
         }
     }
-
 }

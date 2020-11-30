@@ -92,7 +92,7 @@ class SavedAlbumsFragment : Fragment() {
                 binding.tvStatus.showStatus(R.string.error_loading)
             }
             IoTransactionsState.REMOVING_SUCCEED -> {
-                deletedAlbumPosition?.let {
+                deletedAlbumPosition?.let { it ->
                     binding.progress.hide()
                     binding.tvStatus.hide()
                     val wasTheLastAlbum = adapter.removeAlbum(it)

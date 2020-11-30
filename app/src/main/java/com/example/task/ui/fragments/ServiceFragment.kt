@@ -18,14 +18,12 @@ import com.example.task.receiver.LocationStateReceiver
 import com.example.task.service.TaskService
 import com.example.task.ui.MainActivity
 import com.example.task.ui.adapters.LocationAdapter
-import com.example.task.ui.viewmodels.LocationInfoViewModel
 import com.example.task.ui.viewmodels.PermissionsViewModel
 import kotlinx.android.synthetic.main.fragment_service.*
 
 
 class ServiceFragment : Fragment() {
 
-    private lateinit var locationViewModel: LocationInfoViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
     private val adapter: LocationAdapter by lazy { LocationAdapter() }
     private var playing: Boolean = false
@@ -42,7 +40,6 @@ class ServiceFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        locationViewModel = ViewModelProvider(this).get(LocationInfoViewModel::class.java)
         permissionsViewModel = ViewModelProvider(activity).get(PermissionsViewModel::class.java)
         return inflater.inflate(R.layout.fragment_service, container, false)
     }
@@ -123,9 +120,9 @@ class ServiceFragment : Fragment() {
     }
 
     private fun registerReceivers() {
-        locationUpdateReceiver = LocationInfoReceiver(locationViewModel)
+        locationUpdateReceiver = LocationInfoReceiver { showLocation(it) }
         locationUpdateReceiver?.register(requireContext())
-        locationStateReceiver = LocationStateReceiver(locationViewModel)
+        locationStateReceiver = LocationStateReceiver { start() }
         locationStateReceiver?.register(requireContext())
     }
 
@@ -135,13 +132,9 @@ class ServiceFragment : Fragment() {
     }
 
     private fun registerObservers() {
-        locationViewModel.getCurrentLocationInfo().observe(viewLifecycleOwner, { showLocation(it) })
-        locationViewModel.isLocationEnabled().observe(viewLifecycleOwner, { if (it) start() })
         permissionsViewModel.isLocationPermissionGranted().observe(viewLifecycleOwner, {
-            if (it) {
-                if (isLocationEnabled(requireContext())) start()
-                else enableLocation(requireContext())
-            }
+            if (isLocationEnabled(requireContext())) start()
+            else enableLocation(requireContext())
         })
     }
 

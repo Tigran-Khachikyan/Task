@@ -5,10 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
-import com.example.task.ui.viewmodels.LocationInfoViewModel
 
 class LocationStateReceiver(
-    private val viewModel: LocationInfoViewModel
+    private val enabled: () -> Unit
 ) : BroadcastReceiver() {
 
     private val intentFilter by lazy {
@@ -25,12 +24,11 @@ class LocationStateReceiver(
                     val isGpsEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                     val isNetworkEnabled =
                         manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-                    if (isGpsEnabled || isNetworkEnabled) viewModel.enableLocation()
+                    if (isGpsEnabled || isNetworkEnabled)
+                        enabled.invoke()
                 }
             }
         }
-
-
     }
 
     fun register(context: Context) {

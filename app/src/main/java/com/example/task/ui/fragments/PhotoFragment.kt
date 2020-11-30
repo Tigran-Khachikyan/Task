@@ -54,7 +54,8 @@ class PhotoFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        activityViewModel.isStoragePermissionGranted().observe(viewLifecycleOwner, {  if (it && info != null) downloadImage(info!!.url) })
+        activityViewModel.isStoragePermissionGranted()
+            .observe(viewLifecycleOwner, { info?.run { downloadImage(url) } })
         photoViewModel.status.observe(viewLifecycleOwner, { showRequestState(it) })
     }
 

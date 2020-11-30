@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.task.isNetworkAvailable

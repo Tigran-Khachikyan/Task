@@ -7,10 +7,9 @@ import android.content.IntentFilter
 import com.example.task.ACTION_INTENT_SEND_LOCATION_INFO
 import com.example.task.KEY_DATA_LOCATION_INFO
 import com.example.task.model.LocationInfo
-import com.example.task.ui.viewmodels.LocationInfoViewModel
 
 class LocationInfoReceiver(
-    private val viewModel: LocationInfoViewModel
+    private val updateLocation: (LocationInfo) -> Unit
 ) : BroadcastReceiver() {
 
     private val intentFilter by lazy { IntentFilter(ACTION_INTENT_SEND_LOCATION_INFO) }
@@ -20,7 +19,7 @@ class LocationInfoReceiver(
         intent?.run {
             if (action == ACTION_INTENT_SEND_LOCATION_INFO) {
                 val locInfo: LocationInfo? = getParcelableExtra(KEY_DATA_LOCATION_INFO)
-                locInfo?.let { viewModel.updateCurrentLocationInfo(it) }
+                locInfo?.let { updateLocation(it) }
             }
         }
     }
