@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 
 
 fun ProgressBar.show() {
@@ -47,6 +46,7 @@ fun View.onInitialized(onInit: () -> Unit) {
 
 fun isMyServiceRunning(serviceClass: Class<*>, context: Context): Boolean {
     val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager?
+    @Suppress("DEPRECATION")
     for (service in manager!!.getRunningServices(Int.MAX_VALUE)) {
         if (serviceClass.name == service.service.className) {
             return true

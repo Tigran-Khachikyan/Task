@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
-import com.example.task.ACTION_INTENT_SEND_LOCATION_INFO
 import com.example.task.ui.viewmodels.LocationInfoViewModel
 
 class LocationStateReceiver(

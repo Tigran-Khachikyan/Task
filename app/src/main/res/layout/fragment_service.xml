@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.ServiceFragment">
 
-
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_play_music"
         android:layout_width="wrap_content"

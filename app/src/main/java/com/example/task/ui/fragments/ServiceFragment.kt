@@ -3,13 +3,10 @@ package com.example.task.ui.fragments
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -67,16 +64,13 @@ class ServiceFragment : Fragment() {
     private fun initView() {
         recLocationInfo.setHasFixedSize(true)
         recLocationInfo.adapter = adapter
-
+        playing = isMyServiceRunning(TaskService::class.java, requireContext())
+        if (playing) showServiceRunning()
+        else showServiceStopped()
         btnStartStop.setOnClickListener {
             if (playing) stop()
             else start()
         }
-        playing = isMyServiceRunning(TaskService::class.java, requireContext())
-        if (playing)
-            showServiceRunning()
-        else
-            showServiceStopped()
     }
 
 
@@ -97,20 +91,14 @@ class ServiceFragment : Fragment() {
                     ),
                     REQUEST_CODE_PERMISSION_LOCATION
                 )
-                Log.d("asdabsd6", "isPermissionGranted")
             }
-            !isLocationEnabled(requireContext()) -> {
-                enableLocation(requireContext())
-                Log.d("asdabsd6", "isLocationEnabled")
-            }
+            !isLocationEnabled(requireContext()) -> enableLocation(requireContext())
+
             else -> {
                 val serviceIntent = Intent(requireActivity(), TaskService::class.java)
-                serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android")
                 ContextCompat.startForegroundService(requireActivity(), serviceIntent)
                 playing = true
                 showServiceRunning()
-                Log.d("asdabsd6", "else")
-
             }
         }
     }
@@ -148,18 +136,11 @@ class ServiceFragment : Fragment() {
 
     private fun registerObservers() {
         locationViewModel.getCurrentLocationInfo().observe(viewLifecycleOwner, { showLocation(it) })
-        locationViewModel.isLocationEnabled().observe(viewLifecycleOwner, {
-            if (it) {
-                start()
-                Toast.makeText(requireContext(), "Location enabled!", Toast.LENGTH_SHORT).show()
-            }
-        })
+        locationViewModel.isLocationEnabled().observe(viewLifecycleOwner, { if (it) start() })
         permissionsViewModel.isLocationPermissionGranted().observe(viewLifecycleOwner, {
             if (it) {
-                if (isLocationEnabled(requireContext()))
-                    start()
-                else
-                    enableLocation(requireContext())
+                if (isLocationEnabled(requireContext())) start()
+                else enableLocation(requireContext())
             }
         })
     }

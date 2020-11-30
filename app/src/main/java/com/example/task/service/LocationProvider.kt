@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.util.Log
 import com.example.task.INTERVAL_LOCATION_REQUEST
 import com.example.task.model.LocationInfo
 import com.google.android.gms.location.LocationCallback
@@ -13,7 +12,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
 
 class LocationProvider(private val context: Context) {
@@ -31,8 +29,6 @@ class LocationProvider(private val context: Context) {
 
                 override fun onLocationResult(locationResult: LocationResult?) {
                     super.onLocationResult(locationResult)
-
-
 
                     locationResult?.run {
                         for (loc in locations) {
@@ -61,7 +57,6 @@ class LocationProvider(private val context: Context) {
                 }
             }, null)
     }
-
 
     private fun getAddressFromLocation(location: Location): Address? {
         val geoCoder = Geocoder(context, Locale.getDefault())
