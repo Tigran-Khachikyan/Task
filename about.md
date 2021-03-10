@@ -1,4 +1,5 @@
-<p>The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.
+# Specification Heading
+**The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.**
 To start working with the library, initialization is required, otherwise, the user will get an ExceptionInInitializerError.</p>
 <p>Examples of <b>initialization</b>:</p>
 Java version:
