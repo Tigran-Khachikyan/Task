@@ -1,13 +1,12 @@
 # Specification Heading
 ## Specification Heading
 **The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.**
-To start working with the library, initialization is required, otherwise, the user will get an ExceptionInInitializerError.</p>
-<p>Examples of <b>initialization</b>:</p>
+To start working with the library, initialization is required, otherwise, the user will get an ExceptionInInitializerError.
+Examples of initialization
 Java version:
 
         NexoProvider.Companion
                 .initialize("https://nexo.../", "usersCredentials", 5);
-</p>
 Kotlin version:
                 
             NexoProvider.initialize(
@@ -15,7 +14,7 @@ Kotlin version:
                 basicAuth = "usersCredentials"
            )
 After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously.
-<p>Examples for <b>Standard payment</b>:</p>
+Examples for Standard payment
 Java version:
 
        NexoProvider.Payment.INSTANCE.asyncRequest(new PaymentRequestDataImpl(
