@@ -15,7 +15,7 @@ Kotlin version:
                 basicAuth = "usersCredentials"
            )
 ## Usage
-After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously.
+After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously.\\
 Examples for Standard payment
 Java version:
 
