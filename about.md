@@ -1,6 +1,6 @@
 # About the library
 ## Purpose
-**The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.
+**The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.**
 ## Initialization
 **To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.<br/>
 Examples of initialization
