@@ -2,8 +2,7 @@
 ## Purpose
 The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.
 ## Initialization
-To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.
-
+To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.\\
 Examples of initialization
 Java version:
 
@@ -16,7 +15,7 @@ Kotlin version:
                 basicAuth = "usersCredentials"
            )
 ## Usage
-After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously. 
+After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously.
 Examples for Standard payment
 Java version:
 
