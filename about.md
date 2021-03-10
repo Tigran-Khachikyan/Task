@@ -4,7 +4,8 @@ The library provides safe and encapsulated communication with Nexo server, handl
 ## Initialization
 To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.<br/>
 **Examples of initialization**<br/>
-Java version:<br/>
+Java version:
+
       NexoProvider.Companion
                 .initialize("https://nexo.../", "usersCredentials", 5);
 Kotlin version:
