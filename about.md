@@ -2,9 +2,9 @@
 ## Purpose
 The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.
 ## Initialization
-To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.
-######Examples of initialization
-Java version:
+To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.<br/>
+**Examples of initialization**<br/>
+Java version:<br/>
       NexoProvider.Companion
                 .initialize("https://nexo.../", "usersCredentials", 5);
 Kotlin version:
