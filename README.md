@@ -68,14 +68,15 @@ Java version<br/>
 To operate with the result from the Main thread the AsyncTask or RxJava must be used.
 
         new Thread(() -> {
-                    Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(new PaymentRequestDataImpl(
-                            "transactionId555",
-                            "2020-01-20T12:02:21+01:00",
-                            "EUR",
-                            77.5,
-                            "saleId888",
-                            "serviceId444",
-                            "poiId777")
+                    Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(
+                            new PaymentRequestDataImpl(
+                                    "transactionId555",
+                                    "2020-01-20T12:02:21+01:00",
+                                    "EUR",
+                                    77.5,
+                                    "saleId888",
+                                    "serviceId444",
+                                    "poiId777")
                     );
                     if (responseData.getSuccess()) {
                         PaymentResponseData data = responseData.getData();
