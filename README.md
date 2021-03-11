@@ -84,7 +84,7 @@ To operate with the result from Main thread the AsyncTask or RxJava must be used
                     }
                 }).start();
 Kotlin version<br/>
-The following function must be called either from **uspend function/coroutine** or on background Thread:
+The following function must be called either from **suspend function/coroutine** or on background Thread:
 
         GlobalScope.launch(Dispatchers.IO) {
                     val response = NexoProvider.Payment.syncRequest(
@@ -102,7 +102,7 @@ The following function must be called either from **uspend function/coroutine** 
                    // do some operations with response on Main thread
                     }
                 }
-This function will be called from suspend function/coroutine:
+This function must be called from suspend function/coroutine:
 
         GlobalScope.launch(Dispatchers.IO) {
                         val result: Result<PaymentResponseData> = NexoProvider.Payment.suspendRequest(
