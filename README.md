@@ -33,20 +33,19 @@ Java version:
   
             @Override
             public void onError(String errorInfo) {
-
             }
         });
 Kotlin version:
 
         NexoProvider.Payment.asyncRequest(
                         object : PaymentRequestData {
-                            override val transactionId: String = "transactionId"
+                            override val transactionId: String = "ransactionId555"
                             override val timeStamp: String = "2019-02-18T07:02:22+00:00"
                             override val currency: String = "USD"
                             override val amount: Double = 275.5
-                            override val saleId: String = "id45464684"
-                            override val serviceId: String = "sId44654"
-                            override val poiId: String = "POI_ID64"
+                            override val saleId: String = "saleId888"
+                            override val serviceId: String = "serviceId444"
+                            override val poiId: String = "poiId777"
                         },
                         object : AsyncResultListener<PaymentResponseData> {
 
@@ -57,6 +56,48 @@ Kotlin version:
                             }
                         }
                     )
+**Synchronous requests:** <br/>
+Java version:
+
+        new Thread(() -> {
+                    Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(new PaymentRequestDataImpl(
+                            "transactionId555",
+                            "2020-01-20T12:02:21+01:00",
+                            "EUR",
+                            77.5,
+                            "saleId888",
+                            "serviceId444",
+                            "poiId777")
+                    );
+                    if (responseData.getSuccess()) {
+                        PaymentResponseData data = responseData.getData();
+                    } else {
+                        String error = responseData.getErrorMessage();
+                    }
+                }).start();
+Kotlin version:
+
+        GlobalScope.launch(Dispatchers.IO) {
+                    val response = NexoProvider.Payment.syncRequest(
+                        object : PaymentRequestData {
+                            override val transactionId: String = "transactionId"
+                            override val timeStamp: String = "2019-02-18T07:02:22+00:00"
+                            override val currency: String = "USD"
+                            override val amount: Double = 275.5
+                            override val saleId: String = "saleId55"
+                            override val serviceId: String = "serviceId77"
+                            override val poiId: String = "poiId64"
+                        }
+                    )
+                    withContext(Dispatchers.Main) {
+                   // do some operations with response on Main thread
+                    }
+                }
+
+
+
+
+
 
 
 
