@@ -63,7 +63,7 @@ An object from *PaymentRequestData* interface is created.
 
 
 ### Synchrounous requests
-This kind of request must be done on **background thread**.
+This kind of request must be done on **background thread**.<br/>
 Java version<br/>
 To operate with the result from the Main thread the AsyncTask or RxJava must be used.
 
