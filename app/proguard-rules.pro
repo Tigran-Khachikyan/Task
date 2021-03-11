@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class retrofit2.*
+-keepclasseswithmembernames class * { @retrofit2.* <methods>; }
+-keepclasseswithmembernames class * { @retrofit2.* <fields>; }

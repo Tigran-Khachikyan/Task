@@ -18,9 +18,9 @@ Kotlin version
 After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is uses, as well as its realization.<br/>
 All the examples bellow are associated with the **Standard payment** method.<br/>
 **Asynchronous requests:** <br/>
-This kind of request must be done on Main thread. Result are obtained in callback methods.<br/>
-Java version
-Here an instance of **PaymentRequestDataImpl** class is used.
+This kind of request must be done on Main thread. Results are obtained in the callback methods.<br/>
+Java version<br/>
+An instance of **PaymentRequestDataImpl** class is used.
 
        NexoProvider.Payment.INSTANCE.asyncRequest(new PaymentRequestDataImpl(
                 "transactionId555",
@@ -38,8 +38,8 @@ Here an instance of **PaymentRequestDataImpl** class is used.
             public void onError(String errorInfo) {
             }
         });
-Kotlin version
-Here an object from **PaymentRequestData** interface is created.
+Kotlin version<br/>
+An object from **PaymentRequestData** interface is created.
 
         NexoProvider.Payment.asyncRequest(
                         object : PaymentRequestData {
@@ -61,7 +61,9 @@ Here an object from **PaymentRequestData** interface is created.
                         }
                     )
 **Synchronous requests:** <br/>
-Java version
+This kind of request must be done on background thread.
+Java version<br/>
+To operate with the result from Main thread Handler, AsyncTask or RxJava must be used.
 
         new Thread(() -> {
                     Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(new PaymentRequestDataImpl(
