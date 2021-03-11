@@ -64,7 +64,7 @@ An object from *PaymentRequestData* interface is created.
 
 ### Synchrounous requests
 This kind of requests must be done on **background thread**.<br/>
-The result is type of Result<T>, that is a part of this library:
+**Result** is the returned type for these methods and is part of this library:
 
         data class Result<T>(
                 val data: T?,
