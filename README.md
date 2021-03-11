@@ -20,7 +20,7 @@ All the examples bellow are associated with the **Standard payment** method.<br/
 **Asynchronous requests:** <br/>
 This kind of request must be done on Main thread. Results are obtained in the callback methods.<br/>
 Java version<br/>
-An instance of **PaymentRequestDataImpl** class is used.
+An instance of *PaymentRequestDataImpl* class is used.
 
        NexoProvider.Payment.INSTANCE.asyncRequest(new PaymentRequestDataImpl(
                 "transactionId555",
@@ -39,7 +39,7 @@ An instance of **PaymentRequestDataImpl** class is used.
             }
         });
 Kotlin version<br/>
-An object from **PaymentRequestData** interface is created.
+An object from *PaymentRequestData* interface is created.
 
         NexoProvider.Payment.asyncRequest(
                         object : PaymentRequestData {
@@ -63,7 +63,7 @@ An object from **PaymentRequestData** interface is created.
 **Synchronous requests:** <br/>
 This kind of request must be done on background thread.
 Java version<br/>
-To operate with the result from Main thread Handler, AsyncTask or RxJava must be used.
+To operate with the result from Main thread the AsyncTask or RxJava must be used.
 
         new Thread(() -> {
                     Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(new PaymentRequestDataImpl(
@@ -81,7 +81,8 @@ To operate with the result from Main thread Handler, AsyncTask or RxJava must be
                         String error = responseData.getErrorMessage();
                     }
                 }).start();
-Kotlin version
+Kotlin version<br/>
+The following function must be called either from suspend function/coroutine or on background Thread:
 
         GlobalScope.launch(Dispatchers.IO) {
                     val response = NexoProvider.Payment.syncRequest(
@@ -99,23 +100,23 @@ Kotlin version
                    // do some operations with response on Main thread
                     }
                 }
+This function will be called from suspend function/coroutine:
 
         GlobalScope.launch(Dispatchers.IO) {
-                    val response = NexoProvider.Payment.suspendRequest(
-                        object : PaymentRequestData {
-                            override val transactionId: String = "transactionId"
-                            override val timeStamp: String = "2019-02-18T07:02:22+00:00"
-                            override val currency: String = "USD"
-                            override val amount: Double = 275.5
-                            override val saleId: String = "saleId55"
-                            override val serviceId: String = "serviceId77"
-                            override val poiId: String = "poiId64"
+                        val result: Result<PaymentResponseData> = NexoProvider.Payment.suspendRequest(
+                                PaymentRequestDataImpl(
+                                        "transactionId555",
+                                        "2020-01-20T12:02:21+01:00",
+                                        "EUR",
+                                        77.5,
+                                        "saleId888",
+                                        "serviceId444",
+                                        "poiId777")
+                        )
+                        withContext(Dispatchers.Main) {
+                       // do some operations with response on Main thread
                         }
-                    )
-                    withContext(Dispatchers.Main) {
-                   // do some operations with response on Main thread
                     }
-                }
 
 
 
