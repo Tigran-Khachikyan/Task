@@ -15,10 +15,10 @@ Kotlin version
             basicAuth = "usersCredentials"
        )
 ## Usage
-After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is uses, as well as its realization.<br/>
-All the examples bellow are associated with the **Standard payment** method.
-### Synchrounous requests
-This kind of request must be done on **Main thread**. Results are obtained in the callback methods.<br/>
+After the initialization, several methods are available for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is used, as well as its realization.<br/>
+All the examples below are associated with the **Standard payment** method.
+### Asynchronous requests
+This kind of request must be done on the **Main thread**. Results are obtained in the callback methods.<br/>
 Java version<br/>
 An instance of *PaymentRequestDataImpl* class is used.
 
@@ -62,10 +62,10 @@ An object from *PaymentRequestData* interface is created.
                     )
 
 
-### Asynchrounous requests
+### Synchrounous requests
 This kind of request must be done on **background thread**.
 Java version<br/>
-To operate with the result from Main thread the AsyncTask or RxJava must be used.
+To operate with the result from the Main thread the AsyncTask or RxJava must be used.
 
         new Thread(() -> {
                     Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(new PaymentRequestDataImpl(
