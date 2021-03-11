@@ -114,7 +114,8 @@ This function will be called from suspend function/coroutine:
                                         "poiId777")
                         )
                         withContext(Dispatchers.Main) {
-                       // do some operations with response on Main thread
+                                 if(result.success) //so something with (result.data)
+                                 else  //get the error (result.errorMessage)
                         }
                     }
 
