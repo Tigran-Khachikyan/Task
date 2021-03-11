@@ -3,21 +3,24 @@
 The library provides safe and encapsulated communication with Nexo server, handling the request data from user applications and processing the response from the server.
 ## Initialization
 To start working with the library, initialization is required, otherwise, the user will get an **ExceptionInInitializerError**.<br/>
-Java version example:
+Example of initialization:<br/>
+Java version
 
-      NexoProvider.Companion
+       NexoProvider.Companion
                 .initialize("https://nexo.../", "usersCredentials", 5);
-Kotlin version example:
+Kotlin version
 
-            NexoProvider.initialize(
-                baseUrl = "https://nexo.../",
-                basicAuth = "usersCredentials"
-           )
+        NexoProvider.initialize(
+            baseUrl = "https://nexo.../",
+            basicAuth = "usersCredentials"
+       )
 ## Usage
-After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously.<br/>
-All the examples bellow are associated with the **Standard payment** method. <br/>
+After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is uses, as well as its realization.<br/>
+All the examples bellow are associated with the **Standard payment** method.<br/>
 **Asynchronous requests:** <br/>
-Java version:
+This kind of request must be done on Main thread, and the result must be received from the callback methods.<br/>
+Java version
+Here an instance of **PaymentRequestDataImpl** class is used.
 
        NexoProvider.Payment.INSTANCE.asyncRequest(new PaymentRequestDataImpl(
                 "transactionId555",
@@ -35,7 +38,8 @@ Java version:
             public void onError(String errorInfo) {
             }
         });
-Kotlin version:
+Kotlin version
+Here an object from **PaymentRequestData** interface is created.
 
         NexoProvider.Payment.asyncRequest(
                         object : PaymentRequestData {
@@ -57,7 +61,7 @@ Kotlin version:
                         }
                     )
 **Synchronous requests:** <br/>
-Java version:
+Java version
 
         new Thread(() -> {
                     Result<PaymentResponseData> responseData = NexoProvider.Payment.INSTANCE.syncRequest(new PaymentRequestDataImpl(
@@ -75,7 +79,7 @@ Java version:
                         String error = responseData.getErrorMessage();
                     }
                 }).start();
-Kotlin version:
+Kotlin version
 
         GlobalScope.launch(Dispatchers.IO) {
                     val response = NexoProvider.Payment.syncRequest(
@@ -94,7 +98,22 @@ Kotlin version:
                     }
                 }
 
-
+        GlobalScope.launch(Dispatchers.IO) {
+                    val response = NexoProvider.Payment.suspendRequest(
+                        object : PaymentRequestData {
+                            override val transactionId: String = "transactionId"
+                            override val timeStamp: String = "2019-02-18T07:02:22+00:00"
+                            override val currency: String = "USD"
+                            override val amount: Double = 275.5
+                            override val saleId: String = "saleId55"
+                            override val serviceId: String = "serviceId77"
+                            override val poiId: String = "poiId64"
+                        }
+                    )
+                    withContext(Dispatchers.Main) {
+                   // do some operations with response on Main thread
+                    }
+                }
 
 
 
