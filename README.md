@@ -64,7 +64,6 @@ An object from *PaymentRequestData* interface is created.
 
 ### Synchrounous requests
 This kind of request must be done on **background thread**.<br/>
-Java version<br/>
 The result is type of Result<T>, that is a part of this library:
 
         data class Result<T>(
@@ -72,7 +71,7 @@ The result is type of Result<T>, that is a part of this library:
                 val success: Boolean = true,
                 val errorMessage: String? = null
         )
-
+Java version<br/>
 To operate with the result from the Main thread the AsyncTask or RxJava must be used (a simple thread is used for simplicity in the example):
 
         new Thread(() -> {
