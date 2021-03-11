@@ -17,8 +17,8 @@ Kotlin version
 ## Usage
 After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is uses, as well as its realization.<br/>
 All the examples bellow are associated with the **Standard payment** method.<br/>
-###Asynchronous requests
-This kind of request must be done on Main thread, and the result must be received from the callback methods.<br/>
+**Asynchronous requests:** <br/>
+This kind of request must be done on Main thread. Result are obtained in callback methods.<br/>
 Java version
 Here an instance of **PaymentRequestDataImpl** class is used.
 
