@@ -17,7 +17,7 @@ Kotlin version
 ## Usage
 After the initialization, several methods are avalable for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is uses, as well as its realization.<br/>
 All the examples bellow are associated with the **Standard payment** method.<br/>
-**Asynchronous requests:** <br/>
+##Asynchronous requests
 This kind of request must be done on Main thread. Results are obtained in the callback methods.<br/>
 Java version<br/>
 An instance of *PaymentRequestDataImpl* class is used.
@@ -60,8 +60,8 @@ An object from *PaymentRequestData* interface is created.
                             }
                         }
                     )
-**Synchronous requests:** <br/>
-This kind of request must be done on background thread.
+##Synchronous requests
+This kind of request must be done on **background thread**.
 Java version<br/>
 To operate with the result from Main thread the AsyncTask or RxJava must be used.
 
@@ -82,7 +82,7 @@ To operate with the result from Main thread the AsyncTask or RxJava must be used
                     }
                 }).start();
 Kotlin version<br/>
-The following function must be called either from suspend function/coroutine or on background Thread:
+The following function must be called either from **uspend function/coroutine** or on background Thread:
 
         GlobalScope.launch(Dispatchers.IO) {
                     val response = NexoProvider.Payment.syncRequest(
