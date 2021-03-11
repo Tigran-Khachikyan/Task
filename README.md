@@ -110,7 +110,7 @@ The following function must be called either from **suspend function/coroutine**
                    // do some operations with response on Main thread
                     }
                 }
-This function must be called from suspend function/coroutine:
+This function is **part of Kotlin Coroutines** and must be called only from suspend functions or coroutines:
 
         GlobalScope.launch(Dispatchers.IO) {
                         val result: Result<PaymentResponseData> = NexoProvider.Payment.suspendRequest(
