@@ -18,7 +18,7 @@ Kotlin version
 After the initialization, several methods are available for communication with the server. Each of these requests can be made both synchronously and asynchronously. To pass the needed parameters for the request an interface is used, as well as its realization (concrete classes).<br/>
 All the examples below are associated with the **Standard payment** method.
 ### Asynchronous requests
-This kind of requests must be done on the **Main thread**. An instance of anonymous class from AsyncResultListener<P> interface should be used for obtaining the response, where P is the type of Response associated with the kind of method (*PaymentResponseData* in the examples).<br/>
+This kind of requests must be done on the **Main thread**. An instance of anonymous class from AsyncResultListener<T> interface should be used for obtaining the response, where T is the type of Response associated with the kind of method (*PaymentResponseData* in the examples).<br/>
 Java version<br/>
 An instance of *PaymentRequestDataImpl* class is used.
 
